@@ -38,34 +38,6 @@ class Snake:
         for segment in self.body:
             self.game_board[segment[0]][segment[1]] = self.indicator
 
-    def move(self):
-        curr_head = self.body[-1]
-        if self.direction == Directions.DOWN:
-            next_head = (curr_head[0], curr_head[1] + self.block_size)
-            self.body.append(next_head)
-        elif self.direction == Directions.UP:
-            next_head = (curr_head[0], curr_head[1] - self.block_size)
-            self.body.append(next_head)
-        elif self.direction == Directions.RIGHT:
-            next_head = (curr_head[0] + self.block_size, curr_head[1])
-            self.body.append(next_head)
-        elif self.direction == Directions.LEFT:
-            next_head = (curr_head[0] - self.block_size, curr_head[1])
-            self.body.append(next_head)
-
-        if self.length < len(self.body):
-            self.body.pop(0)
-
-    def steer(self, direction):
-        if self.direction == Directions.DOWN and direction != Directions.UP:
-          self.direction = direction
-        elif self.direction == Directions.UP and direction != Directions.DOWN:
-          self.direction = direction
-        elif self.direction == Directions.LEFT and direction != Directions.RIGHT:
-          self.direction = direction
-        elif self.direction == Directions.RIGHT and direction != Directions.LEFT:
-          self.direction = direction
-
 def translate_to_grid(n):
     return n // BLOCK_SIZE
 
