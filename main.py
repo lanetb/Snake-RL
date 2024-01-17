@@ -7,8 +7,6 @@ from enum import Enum
 
 np.set_printoptions(threshold=sys.maxsize)
 
-
-
 def main():
     pg.init()
     global SCREEN, GAMEBOARD 
