@@ -70,7 +70,7 @@ def step(GAMEBOARD, Move):
 
 def draw_grid():
     #clear()
-    print(GAMEBOARD)
+    #print(GAMEBOARD)
     for i in range(0, GAMEBOARD_X):
         for j in range(0, GAMEBOARD_Y):
             if GAMEBOARD[i][j] == SNAKENUMBER:

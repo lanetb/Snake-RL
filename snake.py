@@ -95,13 +95,11 @@ class Snake:
         self.body.insert(0, self.body[0])
 
     def check_food(self, food):
-        print(self.body)
+        #print(self.body)
         head = self.body[-1]
         if head[0] == food.x and head[1] == food.y:
             self.grow()
             food.respawn()
-            
-
 
 def translate_to_grid(n):
     return n // BLOCK_SIZE
