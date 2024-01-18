@@ -16,7 +16,7 @@ GAMEBOARD = np.zeros((GAMEBOARD_X, GAMEBOARD_Y) , dtype=int)
 RUNNING = True
 SCREEN.fill(BLACK)
 GAMEOVER = False 
-snake = Snake(SNAKENUMBER, [(1, 1),(0,1)], GREEN, Directions.DOWN, GAMEBOARD)
+snake = Snake(SNAKENUMBER, [(0, 0),(0,1)], GREEN, Directions.DOWN, GAMEBOARD)
 food = Food(BLOCK_SIZE, SCREEN_SIZE, GAMEBOARD)
 clock = pg.time.Clock()
 
@@ -51,18 +51,29 @@ def run():
         
         GAMEBOARD, REWARD, GAMEOVER = step(GAMEBOARD, move)
 
-        if GAMEOVER:
+        if GAMEOVER == "GAMEOVER":
             print("GAME OVER")
             print("REWARD: ", REWARD)
+            print("GAMEBOARD: \n", GAMEBOARD)
+            print(snake.length)
             RUNNING = False
-            break 
+            break
+        elif GAMEOVER == "WIN":
+            print("WIN")
+            print("REWARD: ", REWARD)
+            print("GAMEBOARD: \n", GAMEBOARD)
+            print(snake.length)
+            RUNNING = False
+            break
     
         
 def step(GAMEBOARD, Move):
     FOODREWARD = 0
-    GAMEOVER = snake.check_collision()
-    if GAMEOVER:
+    GAMEOVER = snake.check_gameover()
+    if GAMEOVER == "GAMEOVER":
         return GAMEBOARD, REWARD - 1000, GAMEOVER
+    elif GAMEOVER == "WIN":
+        return GAMEBOARD, REWARD + 10000, GAMEOVER
     else:
         time = clock.tick(FPS) / 1000
         snake.change_direction(Move)
@@ -77,8 +88,8 @@ def step(GAMEBOARD, Move):
             return GAMEBOARD, REWARD - 1, GAMEOVER
 
 def draw_grid():
-    #clear()
-    #print(GAMEBOARD)
+    clear()
+    print(GAMEBOARD)
     for i in range(0, GAMEBOARD_X):
         for j in range(0, GAMEBOARD_Y):
             if GAMEBOARD[i][j] == SNAKENUMBER:

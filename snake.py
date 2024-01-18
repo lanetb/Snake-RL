@@ -9,6 +9,7 @@ class Directions(Enum):
     RIGHT = 3
 
 class Snake:
+    queued_move = []
     length = None
     direction = None
     body = None
@@ -31,7 +32,7 @@ class Snake:
         self.respawn(body, direction)
 
     def respawn(self, body, direction):
-        self.length = 1
+        self.length = 2
         self.direction = direction
         self.body = body
 
@@ -77,18 +78,20 @@ class Snake:
         else:
             self.direction = direction
 
-    def check_collision(self):
+    def check_gameover(self):
         head = self.body[-1]
         if head[0] < 0 or head[0] > GAMEBOARD_X-1:
             print("out of bounds x")
-            return True
+            return "GAMEOVER"
         if head[1] < 0 or head[1] > GAMEBOARD_Y-1:
             print("out of bounds y")
-            return True
+            return "GAMEOVER"
         for segment in self.body[:-1]:
             if segment == head:
-                return True
-        return False
+                return "GAMEOVER"
+        if self.length == GAMEBOARD_X * GAMEBOARD_Y:
+            return "WIN"
+        return "GAME"
 
     def grow(self):
         self.length += 1

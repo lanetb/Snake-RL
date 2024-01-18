@@ -20,4 +20,7 @@ class Food:
     def respawn(self):
         self.x = random.randint(0, GAMEBOARD_X - 1)
         self.y = random.randint(0, GAMEBOARD_Y - 1)
+        if self.game_board[self.x][self.y] == SNAKENUMBER:
+            self.respawn()
+        
 
