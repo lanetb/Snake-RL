@@ -4,8 +4,8 @@ from vars import *
 class Food:
     block_size = None
     color = (255,0,0)
-    x = FOOD_START[0];
-    y = FOOD_START[1];
+    x = FOOD_START[0]
+    y = FOOD_START[1]
     bounds = None
 
     def __init__(self, block_size, bounds, game_board):

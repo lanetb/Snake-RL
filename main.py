@@ -9,26 +9,27 @@ import os
 np.set_printoptions(threshold=sys.maxsize)
 clear = lambda : os.system('cls')
 
-def main():
-    pg.init()
-    global SCREEN, GAMEBOARD, AIMOVE, GAMEOVER, snake, food, clock, running
-     
-    SCREEN = pg.display.set_mode(SCREEN_SIZE)
-    GAMEBOARD = np.zeros((GAMEBOARD_X, GAMEBOARD_Y) , dtype=int)
-    running = True
-    SCREEN.fill(BLACK)
-    GAMEOVER = False 
+pg.init()
 
-    snake = Snake(SNAKENUMBER, [(1, 1),(0,1)], GREEN, Directions.DOWN, GAMEBOARD)
-    food = Food(BLOCK_SIZE, SCREEN_SIZE, GAMEBOARD)
-    clock = pg.time.Clock()
-    
-    AIMOVE = None
+SCREEN = pg.display.set_mode(SCREEN_SIZE)
+GAMEBOARD = np.zeros((GAMEBOARD_X, GAMEBOARD_Y) , dtype=int)
+RUNNING = True
+SCREEN.fill(BLACK)
+GAMEOVER = False 
+snake = Snake(SNAKENUMBER, [(1, 1),(0,1)], GREEN, Directions.DOWN, GAMEBOARD)
+food = Food(BLOCK_SIZE, SCREEN_SIZE, GAMEBOARD)
+clock = pg.time.Clock()
 
-    while running:
+AIMOVE = None
+REWARD = 0
+
+def run():
+
+    global RUNNING, GAMEBOARD, GAMEOVER, snake, food, clock, AIMOVE, REWARD
+    while RUNNING:
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                running = False 
+                RUNNING = False 
                 pg.quit()
 
         if PLAYER_INPUT:
@@ -48,24 +49,32 @@ def main():
         else:
             move = snake.direction
         
-        GAMEBOARD, GAMEOVER = step(GAMEBOARD, move)
+        GAMEBOARD, REWARD, GAMEOVER = step(GAMEBOARD, move)
 
         if GAMEOVER:
             print("GAME OVER")
-            break
+            print("REWARD: ", REWARD)
+            RUNNING = False
+            break 
+    
         
 def step(GAMEBOARD, Move):
+    FOODREWARD = 0
     GAMEOVER = snake.check_collision()
-    time = clock.tick(FPS) / 1000
-    
-    snake.change_direction(Move)
-    snake.check_food(food)
-    GAMEBOARD = food.draw(GAMEBOARD)
-    GAMEBOARD = snake.move(GAMEBOARD, time)
-    
-    draw_grid()
-    pg.display.update()
-    return GAMEBOARD, GAMEOVER
+    if GAMEOVER:
+        return GAMEBOARD, REWARD - 1000, GAMEOVER
+    else:
+        time = clock.tick(FPS) / 1000
+        snake.change_direction(Move)
+        FOODREWARD = snake.check_food(food)
+        GAMEBOARD= food.draw(GAMEBOARD)
+        GAMEBOARD = snake.move(GAMEBOARD, time)
+        draw_grid()
+        pg.display.update()
+        if FOODREWARD:
+            return GAMEBOARD, REWARD + 200, GAMEOVER
+        else:
+            return GAMEBOARD, REWARD - 1, GAMEOVER
 
 def draw_grid():
     #clear()
@@ -86,4 +95,4 @@ def draw_grid():
                 pg.draw.rect(SCREEN, GRAY, rect, 1)
 
 if __name__ == "__main__":
-    main()
+    run()

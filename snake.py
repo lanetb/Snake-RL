@@ -48,12 +48,14 @@ class Snake:
             curr_head = self.body[-1]
             if self.direction == Directions.UP:
                 new_head = (curr_head[0], curr_head[1] - 1)
-            elif self.direction == Directions.DOWN:
+            elif self.direction == Directions.DOWN and curr_head[1] + 1 < GAMEBOARD_Y:
                 new_head = (curr_head[0], curr_head[1] + 1)
             elif self.direction == Directions.LEFT:
                 new_head = (curr_head[0] - 1, curr_head[1])
-            elif self.direction == Directions.RIGHT:
+            elif self.direction == Directions.RIGHT and curr_head[0] + 1 < GAMEBOARD_X:
                 new_head = (curr_head[0] + 1, curr_head[1])
+            else:
+                new_head = curr_head
 
             self.body.append(new_head)
             GAMEBOARD[new_head[0]][new_head[1]] = self.indicator
@@ -77,10 +79,10 @@ class Snake:
 
     def check_collision(self):
         head = self.body[-1]
-        if head[0] < 0 or head[0] > GAMEBOARD_X:
+        if head[0] < 0 or head[0] > GAMEBOARD_X-1:
             print("out of bounds x")
             return True
-        if head[1] < 0 or head[1] > GAMEBOARD_Y:
+        if head[1] < 0 or head[1] > GAMEBOARD_Y-1:
             print("out of bounds y")
             return True
         for segment in self.body[:-1]:
@@ -98,6 +100,9 @@ class Snake:
         if head[0] == food.x and head[1] == food.y:
             self.grow()
             food.respawn()
+            return True
+        else:
+            return False
 
 def translate_to_grid(n):
     return n // BLOCK_SIZE
