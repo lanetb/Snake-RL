@@ -11,47 +11,65 @@ clear = lambda : os.system('cls')
 
 def main():
     pg.init()
-    global SCREEN, GAMEBOARD 
+    global SCREEN, GAMEBOARD, AIMOVE, GAMEOVER, snake, food, clock, running
+     
     SCREEN = pg.display.set_mode(SCREEN_SIZE)
     GAMEBOARD = np.zeros((GAMEBOARD_X, GAMEBOARD_Y) , dtype=int)
     running = True
     SCREEN.fill(BLACK)
+    GAMEOVER = False 
+
     snake = Snake(SNAKENUMBER, [(1, 1),(0,1)], (0,255,0), Directions.DOWN, GAMEBOARD)
     food = Food(BLOCK_SIZE, SCREEN_SIZE, GAMEBOARD)
     clock = pg.time.Clock()
+    
+    AIMOVE = None
 
     while running:
-        time = clock.tick(FPS) / 1000
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                running = False
-        snake.check_food(food)
-        GAMEBOARD = snake.move(GAMEBOARD, time)
-        GAMEBOARD = snake.draw(GAMEBOARD)
-        GAMEBOARD = food.draw(GAMEBOARD)
-        
+                running = False 
+                pg.quit()
+
         if PLAYER_INPUT:
             keys = pg.key.get_pressed()
             if keys[pg.K_UP]:
-                snake.change_direction(Directions.UP)
+                move = Directions.UP
             elif keys[pg.K_DOWN]:
-                snake.change_direction(Directions.DOWN)
+                move = Directions.DOWN
             elif keys[pg.K_RIGHT]:
-                snake.change_direction(Directions.RIGHT)
+                move = Directions.RIGHT
             elif keys[pg.K_LEFT]:
-                snake.change_direction(Directions.LEFT)
+                move = Directions.LEFT
+            else:
+                move = snake.direction
+        elif AI_INPUT:
+            move = AIMOVE
+        else:
+            move = snake.direction
         
+        GAMEBOARD, GAMEOVER = step(GAMEBOARD, move)
+
+        if GAMEOVER:
+            print("GAME OVER")
+            break
+                   
         
-        
-        
-        running = snake.check_collision()
-        draw_grid()
-        pg.display.update()
-        
-        
+def step(GAMEBOARD, Move):
+    GAMEOVER = snake.check_collision()
+    time = clock.tick(FPS) / 1000
+    
+    snake.change_direction(Move)
+    snake.check_food(food)
+    GAMEBOARD = food.draw(GAMEBOARD)
+    GAMEBOARD = snake.move(GAMEBOARD, time)
+    
+    draw_grid()
+    pg.display.update()
+    return GAMEBOARD, GAMEOVER
 
 def draw_grid():
-    clear()
+    #clear()
     print(GAMEBOARD)
     for i in range(0, GAMEBOARD_X):
         for j in range(0, GAMEBOARD_Y):
@@ -67,9 +85,6 @@ def draw_grid():
                 rect = pg.Rect(translate_to_cords(i), translate_to_cords(j), BLOCK_SIZE, BLOCK_SIZE)
                 pg.draw.rect(SCREEN, BLACK, rect, 0)
                 pg.draw.rect(SCREEN, GRAY, rect, 1)
-
-
-
 
 if __name__ == "__main__":
     main()

@@ -2,12 +2,12 @@ from enum import Enum
 from vars import *
 import numpy as np
 
-
 class Directions(Enum):
     UP = 0
     DOWN = 1
     LEFT = 2
     RIGHT = 3
+
 
 class Snake:
     length = None
@@ -56,10 +56,12 @@ class Snake:
             elif self.direction == Directions.RIGHT:
                 new_head = (curr_head[0] + 1, curr_head[1])
 
+
             self.body.append(new_head)
             GAMEBOARD[new_head[0]][new_head[1]] = self.indicator
             GAMEBOARD[self.body[0][0]][self.body[0][1]] = EMPTY
             self.body.pop(0)
+            GAMEBOARD = self.draw(GAMEBOARD)
             self.timer += 1 / self.speed
             return GAMEBOARD
     
@@ -77,12 +79,16 @@ class Snake:
 
     def check_collision(self):
         head = self.body[-1]
-        if head[0] < 0 or head[0] >= translate_to_grid(self.bounds[0]) or head[1] < 0 or head[1] >= translate_to_grid(self.bounds[1]):
-            return False
+        if head[0] < 0 or head[0] > GAMEBOARD_X:
+            print("out of bounds x")
+            return True
+        if head[1] < 0 or head[1] > GAMEBOARD_Y:
+            print("out of bounds y")
+            return True
         for segment in self.body[:-1]:
             if segment == head:
-                return False
-        return True
+                return True
+        return False
 
     def grow(self):
         self.length += 1
