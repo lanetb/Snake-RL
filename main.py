@@ -19,7 +19,7 @@ def main():
     SCREEN.fill(BLACK)
     GAMEOVER = False 
 
-    snake = Snake(SNAKENUMBER, [(1, 1),(0,1)], (0,255,0), Directions.DOWN, GAMEBOARD)
+    snake = Snake(SNAKENUMBER, [(1, 1),(0,1)], GREEN, Directions.DOWN, GAMEBOARD)
     food = Food(BLOCK_SIZE, SCREEN_SIZE, GAMEBOARD)
     clock = pg.time.Clock()
     
@@ -53,7 +53,6 @@ def main():
         if GAMEOVER:
             print("GAME OVER")
             break
-                   
         
 def step(GAMEBOARD, Move):
     GAMEOVER = snake.check_collision()
@@ -75,11 +74,11 @@ def draw_grid():
         for j in range(0, GAMEBOARD_Y):
             if GAMEBOARD[i][j] == SNAKENUMBER:
                 rect = pg.Rect(translate_to_cords(i), translate_to_cords(j), BLOCK_SIZE, BLOCK_SIZE)
-                pg.draw.rect(SCREEN, (0,255,0), rect, 0)
+                pg.draw.rect(SCREEN, GREEN, rect, 0)
                 pg.draw.rect(SCREEN, GRAY, rect, 1)
             elif GAMEBOARD[i][j] == FOOD:
                 rect = pg.Rect(translate_to_cords(i), translate_to_cords(j), BLOCK_SIZE, BLOCK_SIZE)
-                pg.draw.rect(SCREEN, (255,0,0), rect, 0)
+                pg.draw.rect(SCREEN, RED, rect, 0)
                 pg.draw.rect(SCREEN, GRAY, rect, 1)
             else:
                 rect = pg.Rect(translate_to_cords(i), translate_to_cords(j), BLOCK_SIZE, BLOCK_SIZE)

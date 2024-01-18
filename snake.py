@@ -8,7 +8,6 @@ class Directions(Enum):
     LEFT = 2
     RIGHT = 3
 
-
 class Snake:
     length = None
     direction = None
@@ -55,7 +54,6 @@ class Snake:
                 new_head = (curr_head[0] - 1, curr_head[1])
             elif self.direction == Directions.RIGHT:
                 new_head = (curr_head[0] + 1, curr_head[1])
-
 
             self.body.append(new_head)
             GAMEBOARD[new_head[0]][new_head[1]] = self.indicator
