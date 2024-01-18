@@ -7,6 +7,7 @@ from food import Food
 import os
 
 np.set_printoptions(threshold=sys.maxsize)
+clear = lambda : os.system('cls')
 
 def main():
     pg.init()
@@ -15,16 +16,19 @@ def main():
     GAMEBOARD = np.zeros((GAMEBOARD_X, GAMEBOARD_Y) , dtype=int)
     running = True
     SCREEN.fill(BLACK)
-    snake = Snake(SNAKENUMBER, [(translate_to_grid(SCREEN_X//2), translate_to_grid(SCREEN_Y//2))], (0,255,0), Directions.LEFT, GAMEBOARD)
+    snake = Snake(SNAKENUMBER, [(1, 1),(0,1)], (0,255,0), Directions.DOWN, GAMEBOARD)
     food = Food(BLOCK_SIZE, SCREEN_SIZE, GAMEBOARD)
     clock = pg.time.Clock()
-    
+
     while running:
         time = clock.tick(FPS) / 1000
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
-        GAMEBOARD = food.draw(pg, SCREEN)
+        snake.check_food(food)
+        GAMEBOARD = snake.move(GAMEBOARD, time)
+        GAMEBOARD = snake.draw(GAMEBOARD)
+        GAMEBOARD = food.draw(GAMEBOARD)
         
         if PLAYER_INPUT:
             keys = pg.key.get_pressed()
@@ -37,13 +41,17 @@ def main():
             elif keys[pg.K_LEFT]:
                 snake.change_direction(Directions.LEFT)
         
-        GAMEBOARD = snake.move(GAMEBOARD, time)
-        snake.draw(pg, SCREEN)
+        
+        
+        
+        running = snake.check_collision()
         draw_grid()
         pg.display.update()
         
+        
 
 def draw_grid():
+    clear()
     print(GAMEBOARD)
     for i in range(0, GAMEBOARD_X):
         for j in range(0, GAMEBOARD_Y):

@@ -13,13 +13,11 @@ class Food:
         self.bounds = bounds
         self.game_board = game_board
 
-    def draw(self, game, window):
-        self.game_board[self.x][self.y] = FOOD
-        return self.game_board
+    def draw(self, GAMEBOARD):
+        GAMEBOARD[self.x][self.y] = FOOD
+        return GAMEBOARD
 
     def respawn(self):
-        blocks_in_x = (self.bounds[0])/self.block_size;
-        blocks_in_y = (self.bounds[1])/self.block_size;
-        self.x = random.randint(0, blocks_in_x - 1) * self.block_size
-        self.y = random.randint(0, blocks_in_y - 1) * self.block_size
+        self.x = random.randint(0, GAMEBOARD_X - 1)
+        self.y = random.randint(0, GAMEBOARD_Y - 1)
 

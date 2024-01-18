@@ -36,9 +36,10 @@ class Snake:
         self.direction = direction
         self.body = body
 
-    def draw(self, game, window):
+    def draw(self, GAMEBOARD):
         for segment in self.body:
-            self.game_board[segment[0]][segment[1]] = self.indicator
+            GAMEBOARD[segment[0]][segment[1]] = self.indicator
+        return GAMEBOARD
 
     def move(self, GAMEBOARD, time):
         if self.timer > 0:
@@ -73,6 +74,28 @@ class Snake:
             return
         else:
             self.direction = direction
+
+    def check_collision(self):
+        head = self.body[-1]
+        if head[0] < 0 or head[0] >= translate_to_grid(self.bounds[0]) or head[1] < 0 or head[1] >= translate_to_grid(self.bounds[1]):
+            return False
+        for segment in self.body[:-1]:
+            if segment == head:
+                return False
+        return True
+
+    def grow(self):
+        self.length += 1
+        self.body.insert(0, self.body[0])
+
+    def check_food(self, food):
+        print(self.body)
+        head = self.body[-1]
+        if head[0] == food.x and head[1] == food.y:
+            self.grow()
+            food.respawn()
+            
+
 
 def translate_to_grid(n):
     return n // BLOCK_SIZE
