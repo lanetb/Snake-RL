@@ -40,7 +40,7 @@ FOOD_START = (0,2)
 
 FPS = 60
 
-SNAKESPEED = 1
+SNAKESPEED = 5
 
 
 

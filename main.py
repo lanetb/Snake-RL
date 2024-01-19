@@ -24,7 +24,6 @@ AIMOVE = None
 REWARD = 0
 
 def run():
-
     global RUNNING, GAMEBOARD, GAMEOVER, snake, food, clock, AIMOVE, REWARD
     while RUNNING:
         for event in pg.event.get():
@@ -65,8 +64,7 @@ def run():
             print(snake.length)
             RUNNING = False
             break
-    
-        
+          
 def step(GAMEBOARD, Move):
     FOODREWARD = 0
     GAMEOVER = snake.check_gameover()
